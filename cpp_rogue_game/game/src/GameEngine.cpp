@@ -59,6 +59,11 @@ namespace game{
             ++x;
             isStateChanged = true;
         }
+        else if (currentGameState == GameStateEnum::START &&  GetKeyState(VK_SPACE) & IS_PRESSED)
+        {
+            currentGameState = GameStateEnum::PLAY;
+            isStateChanged = true;
+        }
 
 
     }
@@ -69,16 +74,22 @@ namespace game{
         if(!isStateChanged){
             return;
         }
-        //Simple drawing
-        system("cls");
-        for (int height = 0; height < y - 1; ++height){
+        if(currentGameState == GameStateEnum::PLAY){
+            //Simple drawing
+            system("cls");
+            for (int height = 0; height < y - 1; ++height){
+                cout << endl;
+            }
+            for (int width = 0; width < x - 1; ++width){
+                cout << " ";
+            }
+            cout << "@";
             cout << endl;
         }
-        for (int width = 0; width < x - 1; ++width){
-            cout << " ";
+        if(currentGameState == GameStateEnum::START){
+            system("cls");
+            cout << "Press SPACE to play" << endl;
         }
-        cout << "@";
-        cout << endl;
         isStateChanged = false;
     }
 
