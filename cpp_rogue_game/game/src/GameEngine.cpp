@@ -1,5 +1,6 @@
 #include "GameEngine.hpp"
 #include <iostream>
+#include <sstream>
 #include <windows.h>
 
 
@@ -64,32 +65,74 @@ namespace game{
             currentGameState = GameStateEnum::PLAY;
             isStateChanged = true;
         }
-
-
     }
     void GameEngine::update(){
+        if ( x == 0) {
+            x += 1;
+        }
+        else if ( x == map.width - 1){
+            x -= 1;
+        }
+        
+        if ( y == 0) {
+            y += 1;
+        }
+        else if ( y == map.height - 1){
+            y -= 1;
+        }
 
+        if (currentGameState == GameStateEnum::PLAY && x == map.end.x && y == map.end.y)
+        {
+            currentGameState = GameStateEnum::WIN;
+            isStateChanged = true;
+        }
+        
     }
     void GameEngine::render(){
         if(!isStateChanged){
             return;
         }
-        if(currentGameState == GameStateEnum::PLAY){
+        if(currentGameState == GameStateEnum::PLAY)
+        {
             //Simple drawing
+            // system("cls");  //villog cli-ben
             system("cls");
-            for (int height = 0; height < y - 1; ++height){
-                cout << endl;
+            stringstream ss;
+            for (int height = 0; height < map.height; ++height){
+                for (int width = 0; width < map.width; ++width){
+                    if (height == 0 || height == map.height - 1 || width == 0 || width == map.width - 1 )
+                    {
+                        ss << "#";
+                    }
+                    else if (height == y && width == x)
+                    {
+                        ss << "@";
+                    }
+                    else if (height == map.end.y && width == map.end.x)
+                    {
+                        ss << "X";
+                    }
+                    else
+                    {
+                        ss << " ";
+                    }
+                }
+                ss << endl;
             }
-            for (int width = 0; width < x - 1; ++width){
-                cout << " ";
-            }
-            cout << "@";
-            cout << endl;
+            
+            cout << ss.str();
         }
-        if(currentGameState == GameStateEnum::START){
+        else if(currentGameState == GameStateEnum::START)
+        {
             system("cls");
             cout << "Press SPACE to play" << endl;
         }
+        else if (currentGameState == GameStateEnum::WIN)
+        {
+            system("cls");
+            cout << "YOU WON!" << endl;
+        }
+        
         isStateChanged = false;
     }
 
