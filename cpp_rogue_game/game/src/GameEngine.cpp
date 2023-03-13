@@ -1,5 +1,6 @@
 #include "GameEngine.hpp"
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <windows.h>
 
@@ -21,6 +22,13 @@ namespace game{
 
     void GameEngine::init(){
         currentTime = std::chrono::high_resolution_clock::now();
+
+        default_random_engine generator(currentTime.time_since_epoch().count());
+        uniform_int_distribution<int> distWidth(1, map.width-1);
+        uniform_int_distribution<int> distHeight(1, map.height-1);
+
+        map.end.x = distWidth(generator);
+        map.end.y = distHeight(generator);
     }
 
     void GameEngine::gameLoop(){
@@ -119,7 +127,6 @@ namespace game{
                 }
                 ss << endl;
             }
-            
             cout << ss.str();
         }
         else if(currentGameState == GameStateEnum::START)
